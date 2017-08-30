@@ -51,11 +51,13 @@ table = zeros(N+1,17);        % memory allocation
 %% FOR-END LOOP
 for i = 1:N+1,
    t = (i-1)*h;                  % time
-   tau = -Kd * w - kp* q_tilde(2:4);   % control law 
+   tau = -Kd * w_tilde - kp* q_tilde(2:4);   % control law 
 
    [phi,theta,psi] = q2euler(q); % transform q to Euler angles
    [phi_tilde,theta_tilde,psi_tilde] = q2euler(q_tilde); % transform q_tilde to Euler angles
    [J,J1,J2] = quatern(q);       % kinematic transformation matrices
+   [~,~, T2] = eulerang(phi, theta, psi);
+   
    
    q_dot = J2*w;                        % quaternion kinematics
    w_dot = I_inv*(Smtrx(I*w)*w + tau);  % rigid-body kinetics
@@ -67,8 +69,14 @@ for i = 1:N+1,
    
    q    = q/norm(q);               % unit quaternion normalization
    
-   q_d     = euler2q(10*sin(t), 0, 15*cos(0.05*t));
+   q_d     = euler2q(10*sin(0.1*t), 0, 15*cos(0.05*t));
    q_tilde = quatmultiply(quatconj(q_d'), q')';
+   
+   Theta_dot = [cos(0.1*t) 0 -15*0.05*sin(0.05*t)];
+   w_d = inv(T2)*Theta_dot';
+   w_tilde = w-w_d;
+   
+   
 end 
 
 %% PLOT FIGURES
@@ -90,9 +98,9 @@ subplot(614),plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
 wLeg = legend('$$\dot{\phi}$$', '$$\dot{\psi}$$', '$$\dot{\theta}$$');
 set(wLeg, 'Interpreter', 'Latex');
 subplot(615),plot(t,Theta_tilde),xlabel('time (s)'),ylabel('deg'),grid
-Ttit = title('\Theta');
+Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
 TLeg = legend('$$\tilde{\phi}$$', '$$\tilde{\psi}$$', '$$\tilde{\theta}$$');
-set(tLeg,  'Interpreter', 'Latex');
+set(TLeg, 'Interpreter', 'Latex');
 subplot(616),plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
 
 

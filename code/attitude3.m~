@@ -51,11 +51,13 @@ table = zeros(N+1,17);        % memory allocation
 %% FOR-END LOOP
 for i = 1:N+1,
    t = (i-1)*h;                  % time
-   tau = -Kd * w - kp* q_tilde(2:4);   % control law 
+   tau = -Kd * w_tilde - kp* q_tilde(2:4);   % control law 
 
    [phi,theta,psi] = q2euler(q); % transform q to Euler angles
    [phi_tilde,theta_tilde,psi_tilde] = q2euler(q_tilde); % transform q_tilde to Euler angles
    [J,J1,J2] = quatern(q);       % kinematic transformation matrices
+   [~,~, T2] = eulerang(phi, theta, psi);
+   
    
    q_dot = J2*w;                        % quaternion kinematics
    w_dot = I_inv*(Smtrx(I*w)*w + tau);  % rigid-body kinetics
@@ -69,6 +71,12 @@ for i = 1:N+1,
    
    q_d     = euler2q(10*sin(0.1*t), 0, 15*cos(0.05*t));
    q_tilde = quatmultiply(quatconj(q_d'), q')';
+   
+   Theta_dot = [cos(0.1*t) 0 -15*0.05*sin(0.05*t)];
+   w_d = inv(T2)*Theta_dot';
+   w_tilde = w-w_d;
+   
+   
 end 
 
 %% PLOT FIGURES
