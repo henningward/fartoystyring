@@ -78,7 +78,9 @@ figure(gcf)
 subplot(511),plot(t,phi),xlabel('time (s)'),ylabel('deg'),title('\phi'),grid
 subplot(512),plot(t,theta, 'color', [0.9290 0.6940 0.1250]),xlabel('time (s)'),ylabel('deg'),title('\theta'),grid
 subplot(513),plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('\psi'),grid
-subplot(514),plot(t,w), legend('\phi', '\psi', '\theta'),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
+subplot(514),plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
+wLeg = legend('$$\dot{\phi}$$', '$$\dot{\psi}$$', '$$\dot{\theta}$$');
+set(wLeg, 'Interpreter', 'Latex');
 subplot(515),plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
 
 
