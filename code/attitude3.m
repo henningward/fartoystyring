@@ -20,6 +20,8 @@
 % Author:                   2016-05-30 Thor I. Fossen 
 
 %% USER INPUTS
+
+
 h = 0.1;                     % sample time (s)
 N  = 2000;                    % number of samples
 
@@ -41,22 +43,41 @@ theta   = -5*deg2rad;
 psi     = 15*deg2rad;
 
 q       = euler2q(phi,theta,psi)   % transform initial Euler angles to q
-q_d     = euler2q(10*sin(0), 0, 15*cos(0.05*0))
-q_tilde = quatmultiply(quatconj(q_d'), q')';
-
 
 w = [0 0 0]';                 % initial angular rates
+
+
 table = zeros(N+1,17);        % memory allocation
+
+
 
 %% FOR-END LOOP
 for i = 1:N+1,
    t = (i-1)*h;                  % time
-   tau = -Kd * w_tilde - kp* q_tilde(2:4);   % control law 
-
+   
+   phi_d =10*sin(0.1*t)*deg2rad;
+   theta_d = 0*deg2rad;
+   psi_d = 15*cos(0.05*t)*deg2rad;
+   q_d = euler2q(phi_d,theta_d,psi_d);  
+   
+   q_tilde = quatmultiply(quatconj(q_d'), q')';
+   
+   
    [phi,theta,psi] = q2euler(q); % transform q to Euler angles
    [phi_tilde,theta_tilde,psi_tilde] = q2euler(q_tilde); % transform q_tilde to Euler angles
+   [~,~, T2] = eulerang(phi_d, theta_d, psi_d);
+   
+   
+   Theta_dot = [cos(0.1*t)*deg2rad 0*deg2rad -15*0.05*sin(0.05*t)*deg2rad];
+   
+   w_d = inv(T2)*Theta_dot';
+   w_tilde = w-w_d;
+   
+   
+   tau = -Kd * w_tilde - kp* q_tilde(2:4);   % control law 
+      
    [J,J1,J2] = quatern(q);       % kinematic transformation matrices
-   [~,~, T2] = eulerang(phi, theta, psi);
+   
    
    
    q_dot = J2*w;                        % quaternion kinematics
@@ -70,11 +91,11 @@ for i = 1:N+1,
    q    = q/norm(q);               % unit quaternion normalization
    
    q_d     = euler2q(10*sin(0.1*t), 0, 15*cos(0.05*t));
-   q_tilde = quatmultiply(quatconj(q_d'), q')';
+   q_tilde = quatmultiply(quatconj(q_d'), q')'; %cross product
+  
    
-   Theta_dot = [cos(0.1*t) 0 -15*0.05*sin(0.05*t)];
-   w_d = inv(T2)*Theta_dot';
-   w_tilde = w-w_d;
+   
+   
    
    
 end 

@@ -41,8 +41,6 @@ theta   = -5*deg2rad;
 psi     = 15*deg2rad;
 
 q       = euler2q(phi,theta,psi)   % transform initial Euler angles to q
-q_d     = euler2q(10*sin(0), 0, 15*cos(0.05*0))
-q_tilde = quatmultiply(quatconj(q_d'), q')';
 
 
 w = [0 0 0]';                 % initial angular rates
@@ -51,9 +49,18 @@ table = zeros(N+1,17);        % memory allocation
 %% FOR-END LOOP
 for i = 1:N+1,
    t = (i-1)*h;                  % time
+   
+   phi_d =10*sin(0.1*t)*deg2rad;
+   theta_d = 0*deg2rad;
+   psi_d = 15*cos(0.05*t)*deg2rad;
+   q_d = euler2q(phi_d,theta_d,psi_d);  
+   
+   q_tilde = quatmultiply(quatconj(q_d'), q')';
+   
    tau = -Kd * w - kp* q_tilde(2:4);   % control law 
-
+   
    [phi,theta,psi] = q2euler(q); % transform q to Euler angles
+   
    [phi_tilde,theta_tilde,psi_tilde] = q2euler(q_tilde); % transform q_tilde to Euler angles
    [J,J1,J2] = quatern(q);       % kinematic transformation matrices
    
@@ -67,8 +74,7 @@ for i = 1:N+1,
    
    q    = q/norm(q);               % unit quaternion normalization
    
-   q_d     = euler2q(10*sin(0.1*t), 0, 15*cos(0.05*t));
-   q_tilde = quatmultiply(quatconj(q_d'), q')';
+
 end 
 
 %% PLOT FIGURES
@@ -94,10 +100,6 @@ Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
 TLeg = legend('$$\tilde{\phi}$$', '$$\tilde{\psi}$$', '$$\tilde{\theta}$$');
 set(TLeg, 'Interpreter', 'Latex');
 subplot(616),plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
-
-
-
-
 
 
 
