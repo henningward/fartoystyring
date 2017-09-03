@@ -19,11 +19,14 @@
 %
 % Author:                   2016-05-30 Thor I. Fossen 
 
+clear all;
+clc;
+
 %% USER INPUTS
 
 
 h = 0.1;                     % sample time (s)
-N  = 2000;                    % number of samples
+N  = 3000;                    % number of samples
 
 % model parameters
 m = 100;
@@ -47,7 +50,7 @@ q       = euler2q(phi,theta,psi)   % transform initial Euler angles to q
 w = [0 0 0]';                 % initial angular rates
 
 
-table = zeros(N+1,17);        % memory allocation
+table = zeros(N+1,20);        % memory allocation
 
 
 
@@ -83,7 +86,7 @@ for i = 1:N+1,
    q_dot = J2*w;                        % quaternion kinematics
    w_dot = I_inv*(Smtrx(I*w)*w + tau);  % rigid-body kinetics
 
-   table(i,:) = [t q' phi theta psi w' tau' phi_tilde theta_tilde psi_tilde];  % store data in table
+   table(i,:) = [t q' phi theta psi w' tau' phi_tilde theta_tilde psi_tilde phi_d theta_d psi_d];  % store data in table
    
    q    = q + h*q_dot;	             % Euler integration
    w    = w + h*w_dot;
@@ -109,25 +112,40 @@ psi         = rad2deg*table(:,8);
 w           = rad2deg*table(:,9:11);  
 tau         = table(:,12:14);
 Theta_tilde = rad2deg*table(:,15:17);
+desired_ang = rad2deg*table(:,18:20);
+actual_ang =  rad2deg*table(:,6:8);
 
 clf
-figure(gcf)
-subplot(611),plot(t,phi),xlabel('time (s)'),ylabel('deg'),title('\phi'),grid
-subplot(612),plot(t,theta, 'color', [0.9290 0.6940 0.1250]),xlabel('time (s)'),ylabel('deg'),title('\theta'),grid
-subplot(613),plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('\psi'),grid
-subplot(614),plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
+
+%{
+figure(1)
+plot(t,phi),xlabel('time (s)'),ylabel('deg'),title('\phi'),grid
+figure(2)
+plot(t,theta, 'color', [0.9290 0.6940 0.1250]),xlabel('time (s)'),ylabel('deg'),title('\theta'),grid
+figure(3)
+plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('\psi'),grid
+%}
+
+figure(1)
+plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
 wLeg = legend('$$\dot{\phi}$$', '$$\dot{\psi}$$', '$$\dot{\theta}$$');
 set(wLeg, 'Interpreter', 'Latex');
-subplot(615),plot(t,Theta_tilde),xlabel('time (s)'),ylabel('deg'),grid
+figure(2)
+plot(t,Theta_tilde),xlabel('time (s)'),ylabel('deg'),grid
 Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
-TLeg = legend('$$\tilde{\phi}$$', '$$\tilde{\psi}$$', '$$\tilde{\theta}$$');
+TLeg = legend('$$\tilde{\phi}$$ tracking error', '$$\tilde{\psi}$$ tracking error', '$$\tilde{\theta}$$ tracking error');
 set(TLeg, 'Interpreter', 'Latex');
-subplot(616),plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
+figure(3)
+plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
 
-
-
-
-
+figure(4)
+plot(t,desired_ang),xlabel('time (s)'),ylabel('deg'),grid
+hold on;
+plot(t,actual_ang, '--'),xlabel('time (s)'),ylabel('deg'),grid, 
+Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
+TLeg = legend('$$\tilde{\phi}$$', '$$\tilde{\psi}$$', '$$\tilde{\theta}$$', '$$\tilde{\phi}$$ tracking reference', '$$\tilde{\psi}$$ tracking reference', '$$\tilde{\theta}$$ tracking reference');
+set(TLeg, 'Interpreter', 'Latex');
+hold off;
 
 
 

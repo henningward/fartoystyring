@@ -19,6 +19,8 @@
 %
 % Author:                   2016-05-30 Thor I. Fossen 
 
+clear all;
+clc;
 %% USER INPUTS
 h = 0.1;                     % sample time (s)
 N  = 2000;                    % number of samples
@@ -74,16 +76,19 @@ w       = rad2deg*table(:,9:11);
 tau     = table(:,12:14);
 
 clf
-figure(gcf)
-subplot(511),plot(t,phi),xlabel('time (s)'),ylabel('deg'),title('\phi'),grid
-subplot(512),plot(t,theta, 'color', [0.9290 0.6940 0.1250]),xlabel('time (s)'),ylabel('deg'),title('\theta'),grid
-subplot(513),plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('\psi'),grid
-subplot(514),plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
+
+figure(1)
+plot(t,phi),xlabel('time (s)'),ylabel('deg'),title('\phi'),grid
+figure(2)
+plot(t,theta, 'color', [0.9290 0.6940 0.1250]),xlabel('time (s)'),ylabel('deg'),title('\theta'),grid
+figure(3)
+plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('\psi'),grid
+figure(4)
+plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
 wLeg = legend('$$\dot{\phi}$$', '$$\dot{\psi}$$', '$$\dot{\theta}$$');
 set(wLeg, 'Interpreter', 'Latex');
-subplot(515),plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
-
-
+figure(5)
+plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
 
 
 
