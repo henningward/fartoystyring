@@ -143,7 +143,7 @@ plot(t,desired_ang),xlabel('time (s)'),ylabel('deg'),grid
 hold on;
 plot(t,actual_ang, '--'),xlabel('time (s)'),ylabel('deg'),grid, 
 Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
-TLeg = legend('$$\tilde{\phi}$$', '$$\tilde{\psi}$$', '$$\tilde{\theta}$$', '$$\tilde{\phi}$$ tracking reference', '$$\tilde{\psi}$$ tracking reference', '$$\tilde{\theta}$$ tracking reference');
+TLeg = legend('$$\phi$$', '$$\psi$$', '$$\theta$$', '$$\tilde{\phi}$$ tracking reference', '$$\tilde{\psi}$$ tracking reference', '$$\tilde{\theta}$$ tracking reference');
 set(TLeg, 'Interpreter', 'Latex');
 hold off;
 

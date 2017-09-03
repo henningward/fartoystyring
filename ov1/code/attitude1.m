@@ -78,11 +78,13 @@ tau     = table(:,12:14);
 clf
 
 figure(1)
-plot(t,phi),xlabel('time (s)'),ylabel('deg'),title('\phi'),grid
-figure(2)
-plot(t,theta, 'color', [0.9290 0.6940 0.1250]),xlabel('time (s)'),ylabel('deg'),title('\theta'),grid
-figure(3)
-plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('\psi'),grid
+hold on;
+plot(t,phi),xlabel('time (s)'),ylabel('deg'),title('Euler angles'),grid
+plot(t,theta, 'color', [0.9290 0.6940 0.1250]),xlabel('time (s)'),ylabel('deg'),title('Euler angles'),grid
+plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('Euler angles'),grid
+wLeg = legend('$$\phi$$', '$$\psi$$', '$$\theta$$');
+set(wLeg, 'Interpreter', 'Latex');
+hold off;
 figure(4)
 plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
 wLeg = legend('$$\dot{\phi}$$', '$$\dot{\psi}$$', '$$\dot{\theta}$$');
