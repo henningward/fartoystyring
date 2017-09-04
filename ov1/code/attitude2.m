@@ -24,7 +24,7 @@ clc;
 
 %% USER INPUTS
 h = 0.1;                     % sample time (s)
-N  = 2000;                    % number of samples
+N  = 3000;                    % number of samples
 
 % model parameters
 m = 100;
@@ -92,23 +92,37 @@ Theta_tilde = rad2deg*table(:,15:17);
 desired_ang = rad2deg*table(:,18:20);
 actual_ang =  rad2deg*table(:,6:8);
 
+clf
+
 figure(1)
+hold on;
 plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
 wLeg = legend('$$\dot{\phi}$$', '$$\dot{\psi}$$', '$$\dot{\theta}$$');
 set(wLeg, 'Interpreter', 'Latex');
+hold off;
+
 figure(2)
+hold on;
 plot(t,Theta_tilde),xlabel('time (s)'),ylabel('deg'),grid
 Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
 TLeg = legend('$$\tilde{\phi}$$ tracking error', '$$\tilde{\psi}$$ tracking error', '$$\tilde{\theta}$$ tracking error');
 set(TLeg, 'Interpreter', 'Latex');
+hold off;
+
 figure(3)
+hold on;
 plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
+hold off;
 
 figure(4)
-plot(t,desired_ang),xlabel('time (s)'),ylabel('deg'),grid
 hold on;
-plot(t,actual_ang, '--'),xlabel('time (s)'),ylabel('deg'),grid, 
-Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
+plot(t,actual_ang(:,1),'Color',[0,0.4470,0.7410]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,actual_ang(:,2),'Color',[0.85,0.325,0.098]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,actual_ang(:,3),'Color',[0.929,0.694,0.125]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,desired_ang(:,1),'linestyle','--','Color',[0,0.4470,0.7410]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,desired_ang(:,2),'linestyle','--','Color',[0.85,0.325,0.098]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,desired_ang(:,3),'linestyle','--','Color',[0.929,0.694,0.125]),xlabel('time (s)'),ylabel('deg'),grid 
+Ttit = title('Euler angles')
 TLeg = legend('$$\phi$$', '$$\psi$$', '$$\theta$$', '$$\tilde{\phi}$$ tracking reference', '$$\tilde{\psi}$$ tracking reference', '$$\tilde{\theta}$$ tracking reference');
 set(TLeg, 'Interpreter', 'Latex');
 hold off;

@@ -50,7 +50,7 @@ q       = euler2q(phi,theta,psi)   % transform initial Euler angles to q
 w = [0 0 0]';                 % initial angular rates
 
 
-table = zeros(N+1,20);        % memory allocation
+table = zeros(N+1,23);        % memory allocation
 
 
 
@@ -86,7 +86,7 @@ for i = 1:N+1,
    q_dot = J2*w;                        % quaternion kinematics
    w_dot = I_inv*(Smtrx(I*w)*w + tau);  % rigid-body kinetics
 
-   table(i,:) = [t q' phi theta psi w' tau' phi_tilde theta_tilde psi_tilde phi_d theta_d psi_d];  % store data in table
+   table(i,:) = [t q' phi theta psi w' tau' phi_tilde theta_tilde psi_tilde phi_d theta_d psi_d w_d'];  % store data in table
    
    q    = q + h*q_dot;	             % Euler integration
    w    = w + h*w_dot;
@@ -127,26 +127,38 @@ plot(t,psi, 'r'),xlabel('time (s)'),ylabel('deg'),title('\psi'),grid
 %}
 
 figure(1)
+hold on;
 plot(t,w),xlabel('time (s)'),ylabel('deg/s'),title('w'),grid
 wLeg = legend('$$\dot{\phi}$$', '$$\dot{\psi}$$', '$$\dot{\theta}$$');
 set(wLeg, 'Interpreter', 'Latex');
+hold off;
+
 figure(2)
+hold on;
 plot(t,Theta_tilde),xlabel('time (s)'),ylabel('deg'),grid
 Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
 TLeg = legend('$$\tilde{\phi}$$ tracking error', '$$\tilde{\psi}$$ tracking error', '$$\tilde{\theta}$$ tracking error');
 set(TLeg, 'Interpreter', 'Latex');
+hold off;
+
 figure(3)
+hold on;
 plot(t,tau),xlabel('time (s)'),ylabel('Nm'),title('\tau'),grid
+hold off;
+
 
 figure(4)
-plot(t,desired_ang),xlabel('time (s)'),ylabel('deg'),grid
 hold on;
-plot(t,actual_ang, '--'),xlabel('time (s)'),ylabel('deg'),grid, 
-Ttit = title('$\tilde{\Theta}$', 'Interpreter', 'Latex');
+plot(t,actual_ang(:,1),'Color',[0,0.4470,0.7410]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,actual_ang(:,2),'Color',[0.85,0.325,0.098]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,actual_ang(:,3),'Color',[0.929,0.694,0.125]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,desired_ang(:,1),'linestyle','--','Color',[0,0.4470,0.7410]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,desired_ang(:,2),'linestyle','--','Color',[0.85,0.325,0.098]),xlabel('time (s)'),ylabel('deg'),grid
+plot(t,desired_ang(:,3),'linestyle','--','Color',[0.929,0.694,0.125]),xlabel('time (s)'),ylabel('deg'),grid 
+Ttit = title('Euler angles')
 TLeg = legend('$$\phi$$', '$$\psi$$', '$$\theta$$', '$$\tilde{\phi}$$ tracking reference', '$$\tilde{\psi}$$ tracking reference', '$$\tilde{\theta}$$ tracking reference');
 set(TLeg, 'Interpreter', 'Latex');
 hold off;
-
 
 
 
