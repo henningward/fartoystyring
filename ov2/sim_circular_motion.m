@@ -26,15 +26,15 @@ table = zeros(N+1,10);
 
 
 pos = [0 0 0]';
+u_c = U_c*cos(alpha_c)*cos(beta_c);
 v_c = sin(beta_c)*U_c;
 w_c = U*sin(alpha_c)*cos(beta_c);
-u_c = sqrt(U_c^2-v_c^2-w_c^2);
 U_c_vect = [u_c v_c w_c]';
 
 for i = 1:N+1,
     t = (i-1)*h;
     U_vect = [U*cos(w*t) U*sin(w*t) 0]';
-    U_r_vect = U_vect - U_c_vect;
+    U_r_vect = U_vect + U_c_vect;
     
     pos = pos+h*U_r_vect;
     
