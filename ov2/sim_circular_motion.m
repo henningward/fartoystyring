@@ -36,7 +36,7 @@ V_bc_vect = inv(R_nb) * V_nc_vect;
 
 
 %simulation parameters
-N = 50000;
+N = 5000;
 h = 0.1;
 
 %memory allocation
@@ -60,7 +60,7 @@ for i = 1:N+1,
     speed = norm(V_bb);
     
     
-    crab_angle = asin(V_nb(2)/speed) *rad2deg;
+    crab_angle = asin(V_nb(2)/speed) *rad2deg; %denne er sikkert feil :( 
     sideslip_angle = asin(V_nb(2)/speed)*rad2deg; 
     course_angle = (psi + crab_angle)*rad2deg;
     
@@ -77,12 +77,26 @@ position  = table(:,5:7);
 speed     = table(:,8);
 
 
-figure(1)
+figure()
 plot(position(:,2), position(:,1)),xlabel('East'),ylabel('North'),title('position'),grid
 
+figure()
+plot(t, rel_speed),xlabel('t'),ylabel('m/s'),title('relative velocities'),grid
+
+figure()
+plot(t, speed),xlabel('t'),ylabel('m/s'),title('speed'),grid
 
 
+%{
+figure()
+plot(t, course_angle),xlabel('t'),ylabel('grad'),title('course_angle'),grid
+hold on;
+plot(t, crab_angle),xlabel('t'),ylabel('grad'),grid
+plot(t, sideslip_angle),xlabel('t'),ylabel('grad'),grid
+legend('course angle', 'crab angle', 'sideslip angle')
+hold off;
 
+%}
 
 
 
@@ -123,7 +137,25 @@ rel_speed = table(:,2:4);
 position  = table(:,5:7);
 speed     = table(:,8);
 
-
-figure(2)
+figure()
 plot(position(:,2), position(:,1)),xlabel('East'),ylabel('North'),title('position'),grid
+
+figure()
+plot(t, rel_speed),xlabel('t'),ylabel('m/s'),title('relative velocities'),grid
+
+figure()
+plot(t, speed),xlabel('t'),ylabel('m/s'),title('speed'),grid
+
+
+%{
+figure()
+plot(t, course_angle),xlabel('t'),ylabel('grad'),title('course_angle'),grid
+hold on;
+plot(t, crab_angle),xlabel('t'),ylabel('grad'),grid
+plot(t, sideslip_angle),xlabel('t'),ylabel('grad'),grid
+legend('course angle', 'crab angle', 'sideslip angle')
+hold off;
+
+%}
+
 
