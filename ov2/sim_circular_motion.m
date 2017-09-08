@@ -14,7 +14,7 @@ U = 1.5;
 w = 360*U/(2*pi*100) * deg2rad;
 
 %current parameters
-U_c = 2.6;
+U_c = 0.6;
 alpha_c = 10*deg2rad;
 beta_c = 45*deg2rad;
 
@@ -24,11 +24,12 @@ R_nb = Rzyx(phi,theta,psi); %http://planning.cs.uiuc.edu/node102.html
 %init pos
 pos = [0 0 0]';
 
+%from FLOW to NED
 u_nc = U_c*cos(alpha_c)*cos(beta_c);
-v_nc = sin(beta_c)*U_c;
+v_nc = U_c*sin(beta_c);
 w_nc = U_c*sin(alpha_c)*cos(beta_c);
 
-%currents in NED frame
+%current vector in NED frame
 V_nc_vect = [u_nc v_nc w_nc]';
 
 %currents in BODY frame
@@ -49,25 +50,37 @@ angle_table = zeros(N+1, 3);
 %% WITHOUT CURRENT
 for i = 1:N+1,
     t = (i-1)*h;
+    %velocity of body in NED frame, relative to CURRENT
+    V_r = [U*cos(w*t) U*sin(w*t) 0]';
     
-    %velocity of body in BODY frame, relative to NED
-    V = [U*cos(w*t) U*sin(w*t) 0]';
+    %velocity of body in NED frame, relative to NED
+    V = V_r;
     
+    
+    %{
     %velocity of body in NED frame, relative to NED
     V_nb = R_nb * V;
     
-    %calculation of position at current timestep in BODY frame
-    pos = pos+h*V_nb;
+    %relative velocity of body in NED frame, relative to CURRENT
+    V_nr = R_nb * V_r;
+    %}
+    
+    
+    %calculation of position at current timestep in NED frame
+    pos = pos + h*V;
     
     %calculation of speed, equal to the norm of velocity in BODY frame
     speed = norm(V);
     
+    %calculation of relative speed, equal to the norm of velocity in BODY frame
+    speed_r = norm(V_r);
     
-    crab_angle = asin(V_nb(2)./speed) .*rad2deg;
-    sideslip_angle = asin(V_nb(2)./speed).*rad2deg; 
+    
+    crab_angle = asin(V(2)./speed) .*rad2deg;
+    sideslip_angle = asin(V_r(2)./speed_r).*rad2deg; 
     course_angle = (psi + crab_angle);
  
-    table(i,:) = [t V_nb' pos' speed];
+    table(i,:) = [t V_r' pos' speed];
     
     angle_table(i,:) = [course_angle crab_angle sideslip_angle];
 end
@@ -124,33 +137,37 @@ pos = [0 0 0]';
 for i = 1:N+1,
     t = (i-1)*h;
     
-    %velocity of body in BODY frame, relative to CURRENT
+    %velocity of body in NED frame, relative to CURRENT
     V_r = [U*cos(w*t) U*sin(w*t) 0]';
     
-    %velocity of body in BODY frame, relative to NED
-    V = [U*cos(w*t) U*sin(w*t) 0]' + V_bc_vect;
+    %velocity of body in NED frame, relative to NED
+    V = V_r + V_nc_vect;
     
+    
+    %{
     %velocity of body in NED frame, relative to NED
     V_nb = R_nb * V;
     
     %relative velocity of body in NED frame, relative to CURRENT
     V_nr = R_nb * V_r;
+    %}
     
-    %calculation of position at current timestep in BODY frame
-    pos = pos + h*V_nb;
+    
+    %calculation of position at current timestep in NED frame
+    pos = pos + h*V;
     
     %calculation of speed, equal to the norm of velocity in BODY frame
-    speed = norm(V_nb);
+    speed = norm(V);
     
     %calculation of relative speed, equal to the norm of velocity in BODY frame
-    speed_r = norm(V_nr);
+    speed_r = norm(V_r);
     
     
-    crab_angle = asin(V_nb(2)./speed) .*rad2deg;
-    sideslip_angle = asin(V_nr(2)./speed_r).*rad2deg; 
+    crab_angle = asin(V(2)./speed) .*rad2deg;
+    sideslip_angle = asin(V_r(2)./speed_r).*rad2deg; 
     course_angle = (psi + crab_angle);
  
-    table(i,:) = [t V_nr' pos' speed];
+    table(i,:) = [t V_r' pos' speed];
     
     angle_table(i,:) = [course_angle crab_angle sideslip_angle];
 end
