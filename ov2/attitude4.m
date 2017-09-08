@@ -45,7 +45,6 @@ V_nc_vect = [u_nc v_nc w_nc]';
 V_bc_vect = inv(R_nb) * V_nc_vect;
 
 %w_dot = A*omega+B*Theta*C*delta
-
 A = [-2*zeta_p*omega_p      0                       0;
     0                       -2*zeta_q*omega_q       0;
     0                       0                       -1/T];
@@ -74,26 +73,12 @@ delta = @deltafunc;
 
 for i = 1:N+1,
     t = (i-1)*h;
-   
-    
-  
-    
-    
     %velocity of body in NED frame, relative to CURRENT
     V_r = [U*cos(omega(3)*t) U*sin(omega(3)*t) 0]';
     
     %velocity of body in NED frame, relative to NED
     V = V_r + V_nc_vect;
-    
-    
-    %{
-    %velocity of body in NED frame, relative to NED
-    V_nb = R_nb * V;
-    
-    %relative velocity of body in NED frame, relative to CURRENT
-    V_nr = R_nb * V_r;
-    %}
-    
+    V = V_r;
     
     %calculation of position at current timestep in NED frame
     pos = pos + h*V;
@@ -104,34 +89,21 @@ for i = 1:N+1,
     %calculation of relative speed, equal to the norm of velocity in BODY frame
     speed_r = norm(V_r);
     
-    
     crab_angle = asin(V(2)./speed) .*rad2deg;
     sideslip_angle = asin(V_r(2)./speed_r).*rad2deg; 
     course_angle = (psi + crab_angle);
  
-    table(i,:) = [t V_r' pos' speed];
-    
-    angle_table(i,:) = [course_angle crab_angle sideslip_angle];
-    
-    
-    
-    
-    
     [J, J1, J2] = eulerang(Theta(1), Theta(2), Theta(3));
     Theta_dot = J2 * omega;
     Theta = Theta + h * Theta_dot;
     
     omega_dot = A*omega+B*Theta+C*delta(t)*deg2rad;
-    omega = omega + h * omega_dot;
-        
+    omega = omega + h * omega_dot;        
     
-    
-    
-    
-    
-    
-    
+    table(i,:) = [t V_r' pos' speed];
+    angle_table(i,:) = [course_angle crab_angle sideslip_angle];
 end
+
 t         = table(:,1);
 rel_speed = table(:,2:4);
 position  = table(:,5:7);
