@@ -66,18 +66,26 @@ N = 20000;
 h = 0.1;
 
 %memory allocation
-table = zeros(N+1,10);
+table = zeros(N+1,12);
 angle_table = zeros(N+1, 3);
 
 
 for i = 1:N+1,
     t = (i-1)*h;
+    [J, R_nb, J2] = eulerang(Theta(1), Theta(2), Theta(3));
+    
     %velocity of body in NED frame, relative to CURRENT
     V_r_n = [U*cos(omega(3)*t) U*sin(omega(3)*t) 0]';
     
+    
+    %ALTERNATIVE: assuming that the velocity is given in BODY frame, relative to CURRENT
+    V_r_n = R_nb * [U*cos(omega(3)*t) U*sin(omega(3)*t) 0]';
+    
+    
+    
     %velocity of body in NED frame, relative to NED
     V_b_n = V_r_n + V_nc_vect;
-    %V_b_n = V_r_n;
+    V_b_n = V_r_n;
     
     %velocities in BODY frame, relative to NED
     V_b_b  = inv(R_nb) * V_b_n;
@@ -96,18 +104,18 @@ for i = 1:N+1,
     sideslip_angle = asin(V_r_b(2)./speed_r).*rad2deg; 
     course_angle = (Theta(3)*rad2deg + crab_angle);
  
-    [J, J1, J2] = eulerang(Theta(1), Theta(2), Theta(3));
+    
     
     
     omega_dot = A*omega+B*Theta+C*delta(t)*deg2rad;
-    omega = omega + h * omega_dot;   
-        
+    omega = omega + h * omega_dot; 
+
     
     Theta_dot = (J2 * omega);
     Theta = Theta + h * Theta_dot;
-    R_nb = Rzyx(Theta(1), Theta(2), Theta(3));
+
     
-    table(i,:) = [t V_r_n' pos' speed omega(3) delta(t)];
+    table(i,:) = [t V_r_n' pos' speed omega' delta(t)];
     angle_table(i,:) = [course_angle crab_angle sideslip_angle];
 end
 
@@ -115,36 +123,37 @@ t         = table(:,1);
 rel_speed = table(:,2:4);
 position  = table(:,5:7);
 speed     = table(:,8);
-omega     = table(:,9);
-delta     = table(:,10);
+omega     = table(:,9:11);
+delta     = table(:,12);
 course_angle = angle_table(:,1);
 crab_angle = angle_table(:,2);
 sideslip_angle = angle_table(:,3);
 
 
 figure()
-plot(position(:,2), position(:,1)),xlabel('East'),ylabel('North'),title('position'),grid
+plot(position(:,2), position(:,1)),xlabel('East'),ylabel('North'),title('position (velocity in BODY, no current)'),grid
 
 figure()
-plot(t, rel_speed),xlabel('t'),ylabel('m/s'),title('relative velocities'),grid
+plot(t, rel_speed),xlabel('t'),ylabel('m/s'),title('relative velocities (no current)'),grid
 legend('u', 'v', 'w')
 
 figure()
-plot(t, speed),xlabel('t'),ylabel('m/s'),title('speed'),grid
+plot(t, speed),xlabel('t'),ylabel('m/s'),title('speed (no current)'),grid
 
 
 figure()
-plot(t, course_angle), xlabel('t'),ylabel('grad'),title('angles'),grid
+plot(t, course_angle), xlabel('t'),ylabel('grad'),title('angles (no current)'),grid
 hold on;
 plot(t, crab_angle),xlabel('t'),ylabel('grad'),grid
-plot(t, sideslip_angle),xlabel('t'),ylabel('grad'),grid
+plot(t, sideslip_angle, '-'),xlabel('t'),ylabel('grad'),grid
 legend('course angle', 'crab angle', 'sideslip angle')
 hold off;
 
 figure()
 hold on;
-plot(t, omega), xlabel('t'),ylabel('grad'),title('angles'),grid
-%plot(t, delta), xlabel('t'),ylabel('grad'),title('angles'),grid
+plot(t, omega*rad2deg), xlabel('t'),ylabel('grad'),title('omega (no current)'),grid
+plot(t, K*delta), xlabel('t'),ylabel('grad'),title('omega (no current)'),grid
+legend('p', 'q', 'r', 'K*delta')
 hold off;
 
 function d = deltafunc(t)
