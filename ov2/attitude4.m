@@ -79,13 +79,13 @@ for i = 1:N+1,
     
     
     %ALTERNATIVE: assuming that the velocity is given in BODY frame, relative to CURRENT
-    V_r_n = R_nb * [U*cos(omega(3)*t) U*sin(omega(3)*t) 0]';
+    %V_r_n = R_nb * [U*cos(omega(3)*t) U*sin(omega(3)*t) 0]';
     
     
     
     %velocity of body in NED frame, relative to NED
     V_b_n = V_r_n + V_nc_vect;
-    V_b_n = V_r_n;
+    %V_b_n = V_r_n;
     
     %velocities in BODY frame, relative to NED
     V_b_b  = inv(R_nb) * V_b_n;
@@ -131,18 +131,18 @@ sideslip_angle = angle_table(:,3);
 
 
 figure()
-plot(position(:,2), position(:,1)),xlabel('East'),ylabel('North'),title('position (velocity in BODY, no current)'),grid
+plot(position(:,2), position(:,1)),xlabel('East'),ylabel('North'),title('position (current)'),grid
 
 figure()
-plot(t, rel_speed),xlabel('t'),ylabel('m/s'),title('relative velocities (no current)'),grid
+plot(t, rel_speed),xlabel('t'),ylabel('m/s'),title('relative velocities (current)'),grid
 legend('u', 'v', 'w')
 
 figure()
-plot(t, speed),xlabel('t'),ylabel('m/s'),title('speed (no current)'),grid
+plot(t, speed),xlabel('t'),ylabel('m/s'),title('speed (current)'),grid
 
 
 figure()
-plot(t, course_angle), xlabel('t'),ylabel('grad'),title('angles (no current)'),grid
+plot(t, course_angle), xlabel('t'),ylabel('grad'),title('angles (current)'),grid
 hold on;
 plot(t, crab_angle),xlabel('t'),ylabel('grad'),grid
 plot(t, sideslip_angle, '-'),xlabel('t'),ylabel('grad'),grid
@@ -151,8 +151,8 @@ hold off;
 
 figure()
 hold on;
-plot(t, omega*rad2deg), xlabel('t'),ylabel('grad'),title('omega (no current)'),grid
-plot(t, K*delta), xlabel('t'),ylabel('grad'),title('omega (no current)'),grid
+plot(t, omega*rad2deg), xlabel('t'),ylabel('grad'),title('omega (current)'),grid
+plot(t, K*delta), xlabel('t'),ylabel('grad'),title('omega (current)'),grid
 legend('p', 'q', 'r', 'K*delta')
 hold off;
 
