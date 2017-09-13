@@ -9,10 +9,15 @@ close all;
 deg2rad = pi/180;   
 rad2deg = 180/pi;
 
+%init
+t = 0;
+pos = [0 0 0]';
+Theta = [-1.0 2.0 0.0]'*deg2rad;
+omega = [0.0 0.0 0.0]';
+delta = @deltafunc;
+
+
 %model parameters
-phi = 0 * deg2rad;
-theta = 2.0 * deg2rad;
-psi = 30.0 * deg2rad;
 U = 1.5;
 w = 360*U/(2*pi*100) * deg2rad;
 
@@ -22,7 +27,7 @@ alpha_c = 10*deg2rad;
 beta_c = 45*deg2rad;
 
 
-R_nb = Rzyx(phi,theta,psi); %http://planning.cs.uiuc.edu/node102.html
+R_nb = Rzyx(Theta(1),Theta(2),Theta(3)); %http://planning.cs.uiuc.edu/node102.html
 
 
 % Namato constants
@@ -64,12 +69,6 @@ h = 0.1;
 table = zeros(N+1,10);
 angle_table = zeros(N+1, 3);
 
-%init
-t = 0;
-pos = [0 0 0]';
-Theta = [-1.0 2.0 0.0]'*deg2rad;
-omega = [0.0 0.0 0.0]';
-delta = @deltafunc;
 
 for i = 1:N+1,
     t = (i-1)*h;
@@ -78,7 +77,7 @@ for i = 1:N+1,
     
     %velocity of body in NED frame, relative to NED
     V_b_n = V_r_n + V_nc_vect;
-    V_b_n = V_r_n;
+    %V_b_n = V_r_n;
     
     %velocities in BODY frame, relative to NED
     V_b_b  = inv(R_nb) * V_b_n;
