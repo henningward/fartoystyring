@@ -61,46 +61,54 @@ N = 20000;
 h = 0.1;
 
 %memory allocation
-table = zeros(N+1,8);
+table = zeros(N+1,10);
 angle_table = zeros(N+1, 3);
 
 %init
 t = 0;
 pos = [0 0 0]';
-Theta = [-1.0 2.0 0.0]*deg2rad';
+Theta = [-1.0 2.0 0.0]'*deg2rad;
 omega = [0.0 0.0 0.0]';
 delta = @deltafunc;
 
 for i = 1:N+1,
     t = (i-1)*h;
     %velocity of body in NED frame, relative to CURRENT
-    V_r = [U*cos(omega(3)*t) U*sin(omega(3)*t) 0]';
+    V_r_n = [U*cos(omega(3)*t) U*sin(omega(3)*t) 0]';
     
     %velocity of body in NED frame, relative to NED
-    V = V_r + V_nc_vect;
-    V = V_r;
+    V_b_n = V_r_n + V_nc_vect;
+    V_b_n = V_r_n;
+    
+    %velocities in BODY frame, relative to NED
+    V_b_b  = inv(R_nb) * V_b_n;
+    V_r_b = inv(R_nb) * V_r_n;
     
     %calculation of position at current timestep in NED frame
-    pos = pos + h*V;
+    pos = pos + h*V_b_n;
     
     %calculation of speed, equal to the norm of velocity in BODY frame
-    speed = norm(V);
+    speed = norm(V_b_n);
     
     %calculation of relative speed, equal to the norm of velocity in BODY frame
-    speed_r = norm(V_r);
+    speed_r = norm(V_r_n);
     
-    crab_angle = asin(V(2)./speed) .*rad2deg;
-    sideslip_angle = asin(V_r(2)./speed_r).*rad2deg; 
-    course_angle = (psi + crab_angle);
+    crab_angle = asin(V_b_b(2)./speed) .*rad2deg;
+    sideslip_angle = asin(V_r_b(2)./speed_r).*rad2deg; 
+    course_angle = (Theta(3)*rad2deg + crab_angle);
  
     [J, J1, J2] = eulerang(Theta(1), Theta(2), Theta(3));
-    Theta_dot = J2 * omega;
-    Theta = Theta + h * Theta_dot;
+    
     
     omega_dot = A*omega+B*Theta+C*delta(t)*deg2rad;
-    omega = omega + h * omega_dot;        
+    omega = omega + h * omega_dot;   
+        
     
-    table(i,:) = [t V_r' pos' speed];
+    Theta_dot = (J2 * omega);
+    Theta = Theta + h * Theta_dot;
+    R_nb = Rzyx(Theta(1), Theta(2), Theta(3));
+    
+    table(i,:) = [t V_r_n' pos' speed omega(3) delta(t)];
     angle_table(i,:) = [course_angle crab_angle sideslip_angle];
 end
 
@@ -108,7 +116,8 @@ t         = table(:,1);
 rel_speed = table(:,2:4);
 position  = table(:,5:7);
 speed     = table(:,8);
-
+omega     = table(:,9);
+delta     = table(:,10);
 course_angle = angle_table(:,1);
 crab_angle = angle_table(:,2);
 sideslip_angle = angle_table(:,3);
@@ -133,6 +142,11 @@ plot(t, sideslip_angle),xlabel('t'),ylabel('grad'),grid
 legend('course angle', 'crab angle', 'sideslip angle')
 hold off;
 
+figure()
+hold on;
+plot(t, omega), xlabel('t'),ylabel('grad'),title('angles'),grid
+%plot(t, delta), xlabel('t'),ylabel('grad'),title('angles'),grid
+hold off;
 
 function d = deltafunc(t)
     if t < 700
