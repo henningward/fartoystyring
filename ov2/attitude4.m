@@ -66,7 +66,7 @@ N = 20000;
 h = 0.1;
 
 %memory allocation
-table = zeros(N+1,12);
+table = zeros(N+1,15);
 angle_table = zeros(N+1, 3);
 
 
@@ -85,7 +85,8 @@ for i = 1:N+1,
     
     %velocity of body in NED frame, relative to NED
     V_b_n = V_r_n + V_nc_vect;
-    %V_b_n = V_r_n;
+    
+    %V_b_n = V_r_n; % UNCOMMENT THIS LINE TO REMOVE CURRENTS
     
     %velocities in BODY frame, relative to NED
     V_b_b  = inv(R_nb) * V_b_n;
@@ -115,7 +116,7 @@ for i = 1:N+1,
     Theta = Theta + h * Theta_dot;
 
     
-    table(i,:) = [t V_r_n' pos' speed omega' delta(t)];
+    table(i,:) = [t V_r_n' pos' speed omega' delta(t) Theta'];
     angle_table(i,:) = [course_angle crab_angle sideslip_angle];
 end
 
@@ -125,9 +126,11 @@ position  = table(:,5:7);
 speed     = table(:,8);
 omega     = table(:,9:11);
 delta     = table(:,12);
+Theta     = table(:,13:15);
 course_angle = angle_table(:,1);
 crab_angle = angle_table(:,2);
 sideslip_angle = angle_table(:,3);
+
 
 
 figure()
@@ -139,6 +142,10 @@ legend('u', 'v', 'w')
 
 figure()
 plot(t, speed),xlabel('t'),ylabel('m/s'),title('speed (current)'),grid
+
+figure()
+plot(t, Theta*rad2deg),xlabel('t'),ylabel('deg'),title('Theta'),grid
+legend('phi', 'omega', 'psi')
 
 
 figure()
