@@ -28,24 +28,6 @@ omega_n_chi = 1 / W_chi*omega_n_phi;
 k_p_chi = 2 * zeta_chi * omega_n_chi * V_g / g;
 k_i_chi = omega_n_chi^2 * V_g / g;
 
-
-
-
-
-
-
-
-
-
-
-%{
-W_chi = 7;
-zeta_chi = 1;
-omega_n_chi = 1/W_chi*omega_n_phi;
-
-k_p_chi = 2*zeta_chi*omega_n_chi*V_g/g;
-k_i_chi = omega_n_chi^2*V_g/g;
-%}
 A = [ -0.322 0.052 0.028 -1.12 0.002;
      0 0 1 -0.001 0;
      -10.6 0 -2.87 0.46 -0.65;
