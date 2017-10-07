@@ -3,12 +3,12 @@ clc;
 close all;
 autopilot_constants;
 
-d = 20*deg2rad;
+d = 33*deg2rad;
 sim_time = 500;
 
 %problem 2g
-integratorupperbound = 0.5;
-integratorlowerbound = -0.5;
+integratorupperbound = inf;
+integratorlowerbound = -inf;
 
 figure(1)
 load_system('autopilot_full.slx');
