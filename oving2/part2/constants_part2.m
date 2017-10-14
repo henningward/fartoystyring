@@ -5,6 +5,7 @@ g = 9.81;
 
 
 V_g = 637/3.6; %m/s
+d = .1*deg2rad;
 
 a_phi_1 = 2.87;
 a_phi_2 = -0.65;
@@ -46,6 +47,7 @@ omega_n_chi = 1/W_chi*omega_n_phi;
 k_p_chi = 2*zeta_chi*omega_n_chi*V_g/g;
 k_i_chi = omega_n_chi^2*V_g/g;
 %}
+
 A = [ -0.322 0.052 0.028 -1.12 0.002;
      0 0 1              -0.001     0;
      -10.6 0 -2.87 0.46        -0.65;
