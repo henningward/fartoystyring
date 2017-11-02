@@ -29,6 +29,7 @@ clear all
 clc
 close all
 
+
 %%
 
 rad2deg = 180/pi;
@@ -42,24 +43,30 @@ p0=zeros(2,1);      % Initial position (NED)
 v0=[6.63 0]';       % Initial velocity (body)
 psi0=0;             % Inital yaw angle
 r0=0;               % Inital yaw rate
-c=0;                % Current on (1)/off (0)
+c=1;                % Current on (1)/off (0)
 
 %1.2 finding optimal Nomoto-parameters 
 
 
 amp = -0.3;
 omega_d = 0.008;
+omega_0 = 10 * omega_d;
 
-run_task_1_2
+%heading controller
+T = 65.6949;
+K = 0.0322;
+Kp = T*omega_0^2/K;
+Kd = (2*omega_0*T-1)/K;
+Ki = omega_0/10*Kp;
 
-sim nomotofirstorder
-sim MSFartoystyring12_sin_input
+
+sim MSFartoystyring18
+
 
 figure()
-plot(t1,nomoto_output), hold on;
-plot(t1,r_sin);
-legend('nomoto model','ship model')
-
-
-
+plot(t,v);
+legend({'u', 'v'}, 'Interpreter','latex')
+xlabel('time (s)')
+ylabel('rudder input [deg]')
+title('Rudder input $\delta_c$','Interpreter','latex','FontSize',16)
 

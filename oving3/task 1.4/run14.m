@@ -29,6 +29,7 @@ clear all
 clc
 close all
 
+
 %%
 
 rad2deg = 180/pi;
@@ -54,31 +55,62 @@ run_task_1_2
 
 sim nomotofirstorder
 sim MSFartoystyring12_sin_input
-%{
+
 figure()
-plot(t1,nomoto_output), hold on;
-plot(t1,r_sin);
-legend('nomoto model','ship model')
-%}
+plot(t1,nomoto_output*rad2deg), hold on;
+plot(t1,r_sin*rad2deg);
+legend('Nomoto model','ship model')
+title('1st order Nomoto vs system with sine-wave input','Interpreter','latex', 'FontSize',17)
+xlabel('time (s)')
+ylabel('Yaw rate [deg/s]')
 
 
 
 %% 1.4
 c=1;                % Current on (1)/off (0)
 
+%computing controller parameters
+omega_0 = 10 * omega_d;
+Kp = T*omega_0^2/K;
+Kd = (2*omega_0*T-1)/K;
+Ki = omega_0/10*Kp;
 
-Kp = -50;
-Ki = -0.7;
-Kd = -350;
 sim MSFartoystyring14
 
 figure()
-plot(t,psi_tilde), hold on;
-legend('psi tilde')
+plot(t,psi_tilde*rad2deg);
+legend({'$\tilde\psi$'}, 'Interpreter','latex')
+xlabel('time (s)')
+ylabel('Heading error [deg]')
+title('Closed loop behaviour of $\tilde{\psi}$','Interpreter','latex', 'FontSize',16)
 
 figure()
-plot(t,r_tilde);
-legend('r tilde')
+plot(t,psi*rad2deg), hold on;
+plot(t,psi_d*rad2deg)
+legend({'$\psi$', '$\psi_d$'}, 'Interpreter','latex')
+xlabel('time (s)')
+ylabel('Heading [deg]')
+title('Closed loop behaviour of $\psi$ and $\psi_d$','Interpreter','latex', 'FontSize',16)
 
+figure()
+plot(t,r_tilde*rad2deg);
+legend({'$\tilde{r}$'}, 'Interpreter','latex')
+xlabel('time (s)')
+ylabel('Heading error rate [deg/s]')
+title('Closed loop behaviour of $\tilde{r}$','Interpreter','latex','FontSize',16)
 
+figure()
+plot(t,r*rad2deg), hold on;
+plot(t,r_d*rad2deg)
+legend({'$r$', '$r_d$'}, 'Interpreter','latex')
+xlabel('time (s)')
+ylabel('Heading rate [deg/s]')
+title('Closed loop behaviour of $r$ and $r_d$','Interpreter','latex', 'FontSize',16)
+
+figure()
+plot(t,rudder_input*rad2deg);
+legend({'$\delta_{c}$'}, 'Interpreter','latex')
+xlabel('time (s)')
+ylabel('rudder input [deg]')
+title('Rudder input $\delta_c$','Interpreter','latex','FontSize',16)
 
