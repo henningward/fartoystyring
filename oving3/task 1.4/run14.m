@@ -47,7 +47,6 @@ c=0;                % Current on (1)/off (0)
 
 %1.2 finding optimal Nomoto-parameters 
 
-
 amp = -0.3;
 omega_d = 0.008;
 
