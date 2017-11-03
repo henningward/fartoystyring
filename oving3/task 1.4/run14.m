@@ -72,7 +72,7 @@ c=1;                % Current on (1)/off (0)
 %computing controller parameters
 omega_0 = 10 * omega_d;
 w_psi = 0.05;
-lambda = 0.75;
+lambda = 0.25;
 Kp = 3*lambda^2;
 Kd = 3*lambda;
 Ki = lambda^3;
