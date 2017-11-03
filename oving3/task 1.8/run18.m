@@ -67,24 +67,14 @@ Ki = omega_0/10*Kp;
 %d1 and d2
 %1st equation set
 nc = 5;
-sim MSFartoystyring18
+sim MSFartoystyring16
 nc_1 = nc;
 u_1 = v(end, 1);
 %2nd equation set
-nc = 71;
-sim MSFartoystyring18
+nc = 7.3;
+sim MSFartoystyring16
 nc_2 = nc;
 u_2 = v(end, 1);
-
-u = [u_1 u_1*abs(u_1);
-     u_2 u_2*abs(u_2)];
-n = [nc_1*abs(nc_1);
-     nc_2*abs(nc_2)];
-d = inv(u)*n;
-d_1 = d(1);
-d_2 = d(2);
-
-
 
 syms d1 d2;
 Q1 = d1*u_1+d2*abs(u_1)*u_1 == abs(nc_1)*nc_1;
@@ -92,13 +82,20 @@ Q2 = d1*u_2+d2*abs(u_2)*u_2 == abs(nc_2)*nc_2;
 
 sol = solve([Q1 Q2], [d1 d2], 'ReturnConditions', true);
 
-d3 = sol.d1
-d4 = sol.d2
+d1 = double(sol.d1);
+d2 = double(sol.d2);
+
+
+%estimating mass by comparing forward_speed_model to MSFartoystyring
+m = 5550;
+v0=[0.01 0]';
+sim Forward_speed_model
+sim MSFartoystyring16
 
 
 
 figure()
-plot(t,v);
+plot(t,u_forward_speed, t, v(:,1));
 legend({'u' ,'v'}, 'Interpreter','latex')
 xlabel('time (s)')
 ylabel('rudder input [deg]')
