@@ -72,14 +72,14 @@ c=1;                % Current on (1)/off (0)
 %computing controller parameters
 omega_0 = 10 * omega_d;
 w_psi = 0.05;
-%lambda = 0.01;
-%Kp = 3*lambda^2;
-%Kd = 3*lambda;
-%Ki = lambda^3;
+lambda = 0.75;
+Kp = 3*lambda^2;
+Kd = 3*lambda;
+Ki = lambda^3;
 
-Kp = T*omega_0^2/K;
-Kd = (2*omega_0*T-1)/K;
-Ki = omega_0/10*Kp;
+%Kp = T*omega_0^2/K;
+%Kd = (2*omega_0*T-1)/K;
+%Ki = omega_0/10*Kp;
 
 sim MSFartoystyring14
 

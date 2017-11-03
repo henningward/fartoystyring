@@ -94,13 +94,14 @@ sim MSFartoystyring16
 
 %simulating with speed controller
 c=1;
+v0=[4 0]';
 lambda = 0.03;
 Kp_speed = 2*lambda;
 Ki_speed = lambda^2;
 sim MSFartoystyring18
 
 figure()
-plot(t,u_forward_speed, t, v(:,1));
+plot(t,v(:,1), t, u_d);
 legend({'u' ,'v'}, 'Interpreter','latex')
 xlabel('time (s)')
 ylabel('rudder input [deg]')
