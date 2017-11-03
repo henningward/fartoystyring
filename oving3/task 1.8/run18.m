@@ -76,12 +76,11 @@ sim MSFartoystyring16
 nc_2 = nc;
 u_2 = v(end, 1);
 
+%estimating d1 and d2
 syms d1 d2;
 Q1 = d1*u_1+d2*abs(u_1)*u_1 == abs(nc_1)*nc_1;
 Q2 = d1*u_2+d2*abs(u_2)*u_2 == abs(nc_2)*nc_2;
-
 sol = solve([Q1 Q2], [d1 d2], 'ReturnConditions', true);
-
 d1 = double(sol.d1);
 d2 = double(sol.d2);
 
@@ -93,6 +92,12 @@ sim Forward_speed_model
 sim MSFartoystyring16
 
 
+%simulating with speed controller
+c=1;
+lambda = 0.03;
+Kp_speed = 2*lambda;
+Ki_speed = lambda^2;
+sim MSFartoystyring18
 
 figure()
 plot(t,u_forward_speed, t, v(:,1));
