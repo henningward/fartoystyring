@@ -68,13 +68,19 @@ ylabel('Yaw rate [deg/s]')
 %% 1.4
 c=1;                % Current on (1)/off (0)
 
-%computing controller parameters
+%computing reference model parameters
+zeta = 1;
+omega_n = 0.02;
+
+%computing heading control parameters
 omega_0 = 10 * omega_d;
 w_psi = 0.05;
 lambda = 0.25;
 Kp = 3*lambda^2;
 Kd = 3*lambda;
 Ki = lambda^3;
+
+
 
 %Kp = T*omega_0^2/K;
 %Kd = (2*omega_0*T-1)/K;

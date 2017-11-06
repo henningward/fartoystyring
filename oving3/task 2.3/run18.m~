@@ -50,73 +50,82 @@ c=0;                % Current on (1)/off (0)
 
 amp = -0.3;
 omega_d = 0.008;
+omega_0 = 10 * omega_d;
 
 run_task_1_2
 
-sim nomotofirstorder
-sim MSFartoystyring12_sin_input
-
-figure()
-plot(t1,nomoto_output*rad2deg), hold on;
-plot(t1,r_sin*rad2deg);
-legend('Nomoto model','ship model')
-title('1st order Nomoto vs system with sine-wave input','Interpreter','latex', 'FontSize',17)
-xlabel('time (s)')
-ylabel('Yaw rate [deg/s]')
+%computing reference model parameters
+zeta = 1;
+omega_n = 0.008;
 
 
-
-%% 1.4
-c=1;                % Current on (1)/off (0)
-
-%computing controller parameters
+%computing heading control parameters
 omega_0 = 10 * omega_d;
-w_u = 0.011;
-lambda = 0.01;
-Kp = 3*lambda^2;
-Kd = 3*lambda;
-Ki = lambda^3;
+w_psi = 0.05;
+lambda_heading = 0.25;
+Kp = 3*lambda_heading^2;
+Kd = 3*lambda_heading;
+Ki = lambda_heading^3;
 
-%Kp = T*omega_0^2/K;
-%Kd = (2*omega_0*T-1)/K;
-%Ki = omega_0/10*Kp;
 
-sim MSFartoystyring14
+
+%calculating d1 and d2 for speeed controller
+
+%arbitrary values for nc to obtain two equation sets, needed to calculate
+%d1 and d2
+%1st equation set
+nc = 5;
+sim MSFartoystyring16
+nc_1 = nc;
+u_1 = v(end, 1);
+%2nd equation set
+nc = 7.3;
+sim MSFartoystyring16
+nc_2 = nc;
+u_2 = v(end, 1);
+
+%estimating d1 and d2
+syms d1 d2;
+Q1 = d1*u_1+d2*abs(u_1)*u_1 == abs(nc_1)*nc_1;
+Q2 = d1*u_2+d2*abs(u_2)*u_2 == abs(nc_2)*nc_2;
+sol = solve([Q1 Q2], [d1 d2], 'ReturnConditions', true);
+d1 = double(sol.d1);
+d2 = double(sol.d2);
+
+
+%estimating mass by comparing forward_speed_model to MSFartoystyring
+m = 5550;
+v0=[0.01 0]';
+sim Forward_speed_model
+sim MSFartoystyring16
+
+
+%simulating with speed controller
+c=1;
+v0=[4 0]';
+lambda_speed = 0.3;
+Kp_speed = 2*lambda;
+Ki_speed = lambda^2;
+
+
+%speed reference parameters
+u_r_0 = 4;
+u_r_final = 7;
+u_r_step_time = 500;
+
+sim MSFartoystyring18
 
 figure()
-plot(t,psi_tilde*rad2deg);
-legend({'$\tilde\psi$'}, 'Interpreter','latex')
-xlabel('time (s)')
-ylabel('Heading error [deg]')
-title('Closed loop behaviour of $\tilde{\psi}$','Interpreter','latex', 'FontSize',16)
-
-figure()
-plot(t,psi*rad2deg), hold on;
-plot(t,psi_d*rad2deg)
-legend({'$\psi$', '$\psi_d$'}, 'Interpreter','latex')
-xlabel('time (s)')
-ylabel('Heading [deg]')
-title('Closed loop behaviour of $\psi$ and $\psi_d$','Interpreter','latex', 'FontSize',16)
-
-figure()
-plot(t,r_tilde*rad2deg);
-legend({'$\tilde{r}$'}, 'Interpreter','latex')
-xlabel('time (s)')
-ylabel('Heading error rate [deg/s]')
-title('Closed loop behaviour of $\tilde{r}$','Interpreter','latex','FontSize',16)
-
-figure()
-plot(t,r*rad2deg), hold on;
-plot(t,r_d*rad2deg)
-legend({'$r$', '$r_d$'}, 'Interpreter','latex')
-xlabel('time (s)')
-ylabel('Heading rate [deg/s]')
-title('Closed loop behaviour of $r$ and $r_d$','Interpreter','latex', 'FontSize',16)
-%{
-figure()
-plot(t,rudder_input*rad2deg);
-legend({'$\delta_{c}$'}, 'Interpreter','latex')
+plot(t,v(:,1), t, u_d, t, u_r);
+legend({'u' ,'u_d', 'u_r'}, 'Interpreter','latex')
 xlabel('time (s)')
 ylabel('rudder input [deg]')
-title('Rudder input $\delta_c$','Interpreter','latex','FontSize',16)
-%}
+title('Closed loop behaviour of u, $u_d$ and $u_r$','Interpreter','latex','FontSize',16)
+
+figure()
+plot(t,u_tilde);
+legend({'$u_{tilde}$'}, 'Interpreter','latex')
+xlabel('time (s)')
+ylabel('speed error [m/s]')
+title('Closed loop behaviour of $u_{tilde}$','Interpreter','latex','FontSize',16)
+
