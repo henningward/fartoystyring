@@ -57,6 +57,7 @@ run_task_1_2
 %computing reference model parameters
 zeta = 1;
 omega_n = 0.008;
+omega_psi
 
 
 %computing heading control parameters
@@ -68,6 +69,7 @@ Kd = 3*lambda_heading;
 Ki = lambda_heading^3;
 
 
+%% Task 1.8
 
 %calculating d1 and d2 for speeed controller
 

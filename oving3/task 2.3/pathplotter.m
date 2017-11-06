@@ -26,7 +26,7 @@ function pathplotter(x, y,  psi, tsamp, dec, tstart, tstop, track, WP)
 %
 % You are free to modify the code as necessary.
 
-close all
+
 figure
 hold on
 psiTemp=atan2(WP(2,2)-WP(2,1),WP(1,2)-WP(1,1));

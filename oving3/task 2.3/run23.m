@@ -45,87 +45,86 @@ psi0=0;             % Inital yaw angle
 r0=0;               % Inital yaw rate
 c=0;                % Current on (1)/off (0)
 
-%1.2 finding optimal Nomoto-parameters 
+
+init_controllers
+
+%% task 2.1
 
 
-amp = -0.3;
-omega_d = 0.008;
-omega_0 = 10 * omega_d;
+%Loading waypoints
+load('WP.mat')
 
-run_task_1_2
+wpt_posx = WP(1,:);
+wpt_posy = WP(2,:);
+wpt_time = [0 20 40 60 80 100]; 
+t = 0:1:max(wpt_time);
 
-%computing reference model parameters
-zeta = 1;
-omega_n = 0.008;
+% method 1 - cubic Hermite interpolation
+x_p = pchip(wpt_time,wpt_posx,t);
+y_p = pchip(wpt_time,wpt_posy,t);
 
+% method 2 - spline interpolation
+x_s = spline(wpt_time,wpt_posx,t); 
+y_s = spline(wpt_time,wpt_posy,t);
 
-%computing heading control parameters
-omega_0 = 10 * omega_d;
-w_psi = 0.05;
-lambda_heading = 0.25;
-Kp = 3*lambda_heading^2;
-Kd = 3*lambda_heading;
-Ki = lambda_heading^3;
-
-
-
-%calculating d1 and d2 for speeed controller
-
-%arbitrary values for nc to obtain two equation sets, needed to calculate
-%d1 and d2
-%1st equation set
-nc = 5;
-sim MSFartoystyring16
-nc_1 = nc;
-u_1 = v(end, 1);
-%2nd equation set
-nc = 7.3;
-sim MSFartoystyring16
-nc_2 = nc;
-u_2 = v(end, 1);
-
-%estimating d1 and d2
-syms d1 d2;
-Q1 = d1*u_1+d2*abs(u_1)*u_1 == abs(nc_1)*nc_1;
-Q2 = d1*u_2+d2*abs(u_2)*u_2 == abs(nc_2)*nc_2;
-sol = solve([Q1 Q2], [d1 d2], 'ReturnConditions', true);
-d1 = double(sol.d1);
-d2 = double(sol.d2);
-
-
-%estimating mass by comparing forward_speed_model to MSFartoystyring
-m = 5550;
-v0=[0.01 0]';
-sim Forward_speed_model
-sim MSFartoystyring16
-
-
-%simulating with speed controller
-c=1;
-v0=[4 0]';
-lambda_speed = 0.3;
-Kp_speed = 2*lambda_speed;
-Ki_speed = lambda_speed^2;
-
-
-%speed reference parameters
-u_r_0 = 4;
-u_r_final = 7;
-u_r_step_time = 500;
-
-sim MSFartoystyring18
-
+%plotting method 1 vs method 2
 figure()
-plot(t,v(:,1), t, u_d, t, u_r);
-legend({'u' ,'u_d', 'u_r'}, 'Interpreter','latex')
+subplot(311), plot(wpt_time,wpt_posx,'o',t,[x_p; x_s])
+legend ('waypoint-x position', 'hermite-x position', 'spine-x position');
 xlabel('time (s)')
-ylabel('rudder input [deg]')
-title('Closed loop behaviour of u, $u_d$ and $u_r$','Interpreter','latex','FontSize',16)
+ylabel('x- position (m)')
+subplot(312), plot(wpt_time,wpt_posy,'o',t,[y_p; y_s])
+legend ('waypoint-y position', 'hermite-y position', 'spine-y position');
+xlabel('time (s)')
+ylabel('y- position (m)')
+subplot(313), plot(wpt_posy,wpt_posx,'o',y_p,x_p,y_s,x_s)
+legend ('position', 'hermite position', 'spine position');
+xlabel('y- position (m)')
+ylabel('x- position (m)')
+
+% method 3 - Dubins path
+
+%Need to find maximum turning radius
+sim MSFartoystyringtask21
+pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,zeros(2))
+title('Path with maximum rudder and velocity to find turning radius')
+turningRadius = 365; %m
+n_of_waypoints = length(WP(1, :));
+R_bar = zeros(1, n_of_waypoints-2);
+%line(wpt_posx,wpt_posy)
+for i = 1:n_of_waypoints-2
+    A = WP(:,i+2)- WP(:,i);
+    B = WP(:,i+1)  - WP(:,i);
+    C = WP(:,i+2)- WP(:,i+1)  ;
+    
+    a = norm(A);
+    b = norm(B);
+    c = norm(C);
+
+    %cosinus-rule
+    alpha = 0.5 * acos((b^2+c^2-a^2)/(2*b*c));
+  
+    R_bar(i) = turningRadius * tan(alpha);
+    
+    current_wp = WP(:,i);
+    next_wp = WP(:,i+1);
+    %{
+    beta = asin(next_wp(1)-current_wp(1)/c);
+    center_dist = sqrt(R_bar(i)^2+turningRadius^2);
+    delta_x = center_dist*sin(alpha+beta);
+    delta_y = center_dist*cos(alpha+beta);
+    
+    center_pos = [current_wp(1)+delta_x current_wp(2)+delta_y];
+    %}
+    viscircles(center_pos, R_bar(i), 'LineWidth', 1);
+    %viscircles(r_center(:,i), R_bar(i), 'LineWidth', 1);
+    hold on;
+end
+
 
 figure()
-plot(t,u_tilde);
+plot(p(:,1),p(:,2));
 legend({'$u_{tilde}$'}, 'Interpreter','latex')
 xlabel('time (s)')
 ylabel('speed error [m/s]')
 title('Closed loop behaviour of $u_{tilde}$','Interpreter','latex','FontSize',16)
-
