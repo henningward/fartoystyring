@@ -36,12 +36,12 @@ rad2deg = 180/pi;
 deg2rad = pi/180;
 
 tstart=0;           % Sim start time
-tstop=10000;        % Sim stop time
+tstop=2500;        % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
 p0=[1500 500];      % Initial position (NED)
 v0=[6.63 0]';       % Initial velocity (body)
-psi0=50*pi/180;             % Inital yaw angle
+psi0=150*deg2rad;             % Inital yaw angle
 r0=0;               % Inital yaw rate
 c=1;                % Current on (1)/off (0)
 
@@ -131,10 +131,49 @@ K_i_guidance = 1/300; %1/300*K_p_guidance
 
 
 %%
+%{
 Kp_guidance = 10;
 Ki_guidance = 0.1;
 sim MSFartoystyring22
 
 pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,WP);
+%}
+
+%% Path folowing dependacies
+global L_pp;    %Ship length
+global WP;      %Waypoints
+global k;       %Waypoint index
+global R;       %Circle of acceptance radius
+
+L_pp = 304.8;
+load WP;
+k = 1;
+R = ones(size(WP, 2))*3*L_pp;
+
+
+
+lambda_c = 0.1;
+
+K_p_c = 3*lambda_c^2;
+K_i_c = lambda_c^3;
+K_d_c = 3*lambda_c;
+
+omega_c = 1;
+zeta_c = 1;
+
+
+
+
+%% SIMULATION
+sim MSFartoystyring22
+
+%% Path Plot
+dec = 20;
+track = 0;
+tstop = tsamp * (length(p)-1);
+
+pathplotter(p(:,1), p(:,2), psi, tsamp, dec, tstart, tstop, track, WP);
+
+
 
 

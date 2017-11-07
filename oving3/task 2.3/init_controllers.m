@@ -11,8 +11,8 @@ T = 65.6949;
 K = 0.0322;
 
 %heading model parameters
-zeta = 1;
-omega_psi = 0.02;
+zeta_c = 1;
+omega_c = 0.02;
 
 w_psi = 0.05;
 lambda_heading = 0.25;

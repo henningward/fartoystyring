@@ -26,4 +26,4 @@ xlabel('time (s)')
 ylabel('Yaw rate [deg/s]')
 legend('Nonlinear model','Estimated 1st-order Nomoto model')
 T = 1/x(1);
-K = x(2);
+K = -x(2);

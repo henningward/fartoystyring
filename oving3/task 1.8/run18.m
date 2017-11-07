@@ -45,28 +45,19 @@ psi0=0;             % Inital yaw angle
 r0=0;               % Inital yaw rate
 c=0;                % Current on (1)/off (0)
 
-%1.2 finding optimal Nomoto-parameters 
+%nomoto parameters
+T = 65.6949;
+K = 0.0322;
 
+%heading model parameters
+zeta_c = 1;
+omega_c = 0.02;
 
-amp = -0.3;
-omega_d = 0.008;
-omega_0 = 10 * omega_d;
-
-run_task_1_2
-
-%computing reference model parameters
-zeta = 1;
-omega_n = 0.008;
-omega_psi
-
-
-%computing heading control parameters
-omega_0 = 10 * omega_d;
 w_psi = 0.05;
 lambda_heading = 0.25;
-Kp = 3*lambda_heading^2;
-Kd = 3*lambda_heading;
-Ki = lambda_heading^3;
+Kp_heading = 3*lambda_heading^2;
+Kd_heading = 3*lambda_heading;
+Ki_heading = lambda_heading^3;
 
 
 %% Task 1.8
@@ -77,6 +68,7 @@ Ki = lambda_heading^3;
 %d1 and d2
 %1st equation set
 nc = 5;
+
 sim MSFartoystyring16
 nc_1 = nc;
 u_1 = v(end, 1);
@@ -108,6 +100,8 @@ v0=[4 0]';
 lambda_speed = 0.3;
 Kp_speed = 2*lambda_speed;
 Ki_speed = lambda_speed^2;
+omega_n = 0.008;
+
 
 
 %speed reference parameters

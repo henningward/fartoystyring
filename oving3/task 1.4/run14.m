@@ -69,16 +69,14 @@ ylabel('Yaw rate [deg/s]')
 c=1;                % Current on (1)/off (0)
 
 %computing reference model parameters
-zeta = 1;
-omega_psi = 0.02;
+zeta_c = 1;
+omega_c = 0.02;
 
 %computing heading control parameters
-omega_0 = 10 * omega_d;
-w_psi = 0.05;
 lambda = 0.25;
-Kp = 3*lambda^2;
-Kd = 3*lambda;
-Ki = lambda^3;
+Kp_heading = 3*lambda^2;
+Kd_heading = 3*lambda;
+Ki_heading = lambda^3;
 
 sim MSFartoystyring14
 
