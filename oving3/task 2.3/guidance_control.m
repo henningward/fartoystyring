@@ -14,7 +14,7 @@ function [ output_vector ] = guidance_control( p )
     
     epsilon = R_p(alpha_k)'*(p - WP(:, k));
     [s, e] = deal(epsilon(1), epsilon(2)); 
-    
+
     %delta = sqrt(max((3*L_pp)^2 - e^2, 0)); %Enclosure based approach
     delta = 2*L_pp;
     chi_r = atan(-e/delta);
