@@ -39,11 +39,11 @@ tstart=0;           % Sim start time
 tstop=5000;        % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
-p0=zeros(2,1);      % Initial position (NED)
+p0=[1500 500];      % Initial position (NED)
 v0=[6.63 0]';       % Initial velocity (body)
-psi0=0;             % Inital yaw angle
+psi0=50*deg2rad;             % Inital yaw angle
 r0=0;               % Inital yaw rate
-c=0;                % Current on (1)/off (0)
+c=1;                % Current on (1)/off (0)
 
 
 init_controllers
@@ -66,7 +66,7 @@ y_p = pchip(wpt_time,wpt_posy,t);
 % method 2 - spline interpolation
 x_s = spline(wpt_time,wpt_posx,t); 
 y_s = spline(wpt_time,wpt_posy,t);
-
+%{
 %plotting method 1 vs method 2
 figure()
 subplot(311), plot(wpt_time,wpt_posx,'o',t,[x_p; x_s])
@@ -86,13 +86,15 @@ ylabel('x- position (m)')
 
 %Need to find maximum turning radius
 sim MSFartoystyringtask21
+
 pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,zeros(2))
 title('Path with maximum rudder and velocity to find turning radius')
+%}
 turningRadius = 365; %m
 n_of_waypoints = length(WP(1, :));
 R_bar = zeros(1, n_of_waypoints-2);
 
-
+%{
 
 figure()
 for i = 1:n_of_waypoints-2
@@ -118,5 +120,58 @@ legend ('dubins path','position', 'hermite position', 'spine position');
 xlabel('y- position (m)')
 ylabel('x- position (m)')
 
+%}
+%MSFartoystyring22
+
+
+
+
+    
+    %number of waypoints
+    N = length(WP);
+    
+    %current waypoint
+    persistent k;
+    
+    if isempty(k)
+        k = 2;
+    end
+    
+    %current position
+    x_current = p(1);
+    y_current = p(2);
+    
+    %current waypoint
+    xk_1 = WP(1, k-1);
+    yk_1 = WP(2, k-1);
+    
+    %next waypoint
+    xk_2 = WP(1, k);
+    yk_2 = WP(2, k);
+    
+    if k ~= 6
+        %calculating optimal turningradius
+        lastWP = [WP(1,k-1); WP(2,k-1)];
+        currentWP = [WP(1,k); WP(2,k)]; %way points
+        nextWP = [WP(1,k+1); WP(2,k+1)];
+        u = (lastWP - currentWP)/(norm(lastWP-currentWP));
+        v = (nextWP - currentWP)/(norm(nextWP-currentWP)); %a,b,c
+        w = (u + v)/(norm(u + v));
+        a = acos((norm(v)^2 + norm(u+v)^2 - norm(u)^2)/(2*norm(v)*norm(u+v)));
+        turningRadius = 365 / sin(a) *1.2;
+    else
+        turningRadius = 365;
+    end
+    
+    if ((((xk_2 - xk_1)^2 + (yk_2 - yk_1)^2) <= turningRadius) && (N > k))
+        k = k + 1;
+       
+    end
+    
+    y = turningRadius
+    
+    
+    k = k+1
+    %alpha = atan
 
 

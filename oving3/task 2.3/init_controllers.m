@@ -31,3 +31,9 @@ Ki_speed = lambda_speed^2;
 u_r_0 = 100;
 u_r_final = 100;
 u_r_step_time = 2000;
+
+
+
+
+
+

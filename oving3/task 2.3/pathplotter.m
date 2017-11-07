@@ -96,6 +96,7 @@ if track
     legend('x', 'y')
     grid on;
     hold off
+    
 else
     sw = size(WP);
     alph = zeros(max(sw)-1, 1);

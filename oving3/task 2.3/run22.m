@@ -39,11 +39,11 @@ tstart=0;           % Sim start time
 tstop=5000;        % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
-p0=zeros(2,1);      % Initial position (NED)
+p0=[1500 500];      % Initial position (NED)
 v0=[6.63 0]';       % Initial velocity (body)
-psi0=0;             % Inital yaw angle
+psi0=50*deg2rad;             % Inital yaw angle
 r0=0;               % Inital yaw rate
-c=0;                % Current on (1)/off (0)
+c=1;                % Current on (1)/off (0)
 
 
 init_controllers
@@ -66,7 +66,7 @@ y_p = pchip(wpt_time,wpt_posy,t);
 % method 2 - spline interpolation
 x_s = spline(wpt_time,wpt_posx,t); 
 y_s = spline(wpt_time,wpt_posy,t);
-
+%{
 %plotting method 1 vs method 2
 figure()
 subplot(311), plot(wpt_time,wpt_posx,'o',t,[x_p; x_s])
@@ -86,13 +86,15 @@ ylabel('x- position (m)')
 
 %Need to find maximum turning radius
 sim MSFartoystyringtask21
+
 pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,zeros(2))
 title('Path with maximum rudder and velocity to find turning radius')
+%}
 turningRadius = 365; %m
 n_of_waypoints = length(WP(1, :));
 R_bar = zeros(1, n_of_waypoints-2);
 
-
+%{
 
 figure()
 for i = 1:n_of_waypoints-2
@@ -117,6 +119,11 @@ plot(wpt_posy,wpt_posx,'o',y_p,x_p,y_s,x_s)
 legend ('dubins path','position', 'hermite position', 'spine position');
 xlabel('y- position (m)')
 ylabel('x- position (m)')
+
+%}
+MSFartoystyring22
+
+
 
 
 
