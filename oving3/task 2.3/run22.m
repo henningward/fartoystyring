@@ -121,9 +121,15 @@ xlabel('y- position (m)')
 ylabel('x- position (m)')
 
 %}
-MSFartoystyring22
 
+Kp_guidance = 10;
+Ki_guidance = 0.001;
+sim MSFartoystyring22
 
+pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,WP);
 
+figure()
+plot(t, Delta);
+title('Delta');
 
 
