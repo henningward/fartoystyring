@@ -16,9 +16,9 @@ omega_c = 0.02;
 
 w_psi = 0.05;
 lambda_heading = 0.25;
-Kp = 3*lambda_heading^2;
-Kd = 3*lambda_heading;
-Ki = lambda_heading^3;
+Kp_heading = 3*lambda_heading^2;
+Kd_heading = 3*lambda_heading;
+Ki_heading = lambda_heading^3;
 
 %speed reference model parameters
 omega_n = 0.008;
