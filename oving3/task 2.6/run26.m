@@ -36,7 +36,7 @@ rad2deg = 180/pi;
 deg2rad = pi/180;
 
 tstart=0;           % Sim start time
-tstop=4000;        % Sim stop time
+tstop=5000;        % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
 p0=[1500 500];      % Initial position (NED)
@@ -140,27 +140,7 @@ sim MSFartoystyring22
 pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,WP);
 %}
 
-%% Path folowing dependacies
-global L_pp;    %Ship length
-global WP;      %Waypoints
-global k;       %Waypoint index
-global R;       %Circle of acceptance radius
 
-L_pp = 304.8;
-load WP;
-k = 1;
-R = ones(size(WP, 2))*3*L_pp;
-
-
-
-lambda_c = 0.1;
-
-K_p_c = 3*lambda_c^2;
-K_i_c = lambda_c^3;
-K_d_c = 3*lambda_c;
-
-omega_c = 1;
-zeta_c = 1;
 
 
 

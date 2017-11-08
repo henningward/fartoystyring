@@ -100,24 +100,33 @@ target_start = WP(:,1);
 target_WP = WP(:,2);
 target_heading_deg =-(target_WP(2)-target_start(1))/(target_WP(1)-target_start(2));
 target_heading_deg = target_heading_deg / norm(target_heading_deg);
+target_heading_deg = atan2(WP(2,2)-WP(2,1),WP(1,2)-WP(1,1));
 stepsize = U_t;
 for i = 1:tstop
-    target_position(1, i+1) = target_position(:, i) + stepsize * cos(target_heading_deg);
-    target_position(2, i+1) = target_position(:, i) + stepsize * cos(target_heading_deg);
+    target_position(1, i+1) = target_position(1, i) + stepsize * sin(target_heading_deg);
+    target_position(2, i+1) = target_position(2, i) + stepsize * cos(target_heading_deg) * sign(target_heading_deg);
 end
-line(wpt_posy, wpt_posx)
-line(target_position(2,:), target_position(1,:))
+%line(wpt_posy, wpt_posx)
+%line(target_position(2,:), target_position(1,:))
 
 %% SIMULATION
-%{
+
 sim MSFartoystyring27
 
 %% Path Plot
 
 dec = 20;
-object_tracking = 0;
-pathplotter(p(:,1), p(:,2), psi, tsamp, dec, tstart, tstop, object_tracking, WP);
-%}
+object_tracking = 1;
+pathplotter(p(:,1), p(:,2), psi, tsamp, dec, tstart, tstop, object_tracking, WP(:,1:2));
 
+figure()
+plot(t, pos_error)
+
+figure()
+plot(t, dist_error)
+
+figure()
+plot(target_position(2,:), target_position(1,:)); hold on;
+plot(3500, -2500, 'r*');
 
 

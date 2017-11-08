@@ -12,7 +12,9 @@ K = -0.0337;
 
 %heading model parameters
 zeta_c = 1;
-omega_c = 1;
+omega_c = 0.02;
+
+
 
 w_psi = 0.05;
 lambda_heading = 0.25;
