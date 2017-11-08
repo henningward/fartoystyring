@@ -1,4 +1,4 @@
-function xdot = msfartoystyring(x,u, curr)
+    function xdot = msfartoystyring(x,u, curr)
 % xdot = msfartoystyring(x,u,curr) returns the time derivative of the state
 % vector: x = [ u v r x y psi]' for the MS Fartoystyring, where:
 % u   = surge velocity, must be positive (m/s) - design speed u = 8.23 m/s
