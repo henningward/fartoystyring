@@ -1,30 +1,3 @@
-%% Information 
-% This file is only an example of how you can start the simulation. The
-% sampling time decides how often you store states. The execution  time
-% will increase if you reduce the sampling time.
-
-% Please note that the file "pathplotter.m" (only used in the second part
-% of the assignment) shows the ship path during the path following and
-% target tracking part of the assignment. It can be clever to adjust the sampling
-% time when you use that file because it draws a sketch of the ship in the
-% North-East plane at each time instant. Having a small sampling time will
-% lead to a lot over overlap in the ship drawing. 
-
-% You should base all of your simulink models on the MSFartoystyring model
-% and extend that as you solve the assignment. For your own sake, it is
-% wise to create a new model and run file for each task. That is
-% especially important in the problems you need to hand in since the files
-% you deliver only should create the desired result in that task.
-
-% The msfartoystyring.m file includes the ship model. You are not allowed
-% to change anything within that file. You need to include that file in
-% every folder where you have a simulink model based on
-% "MSFartoystyring.slx". 
-
-% WP.mat is a set of six waypoints that you need to use in the second part of
-% the assignment. The north position is given in the first row and the east
-% position in the second row. 
-
 clear all
 clc
 close all
@@ -36,11 +9,12 @@ rad2deg = 180/pi;
 deg2rad = pi/180;
 
 tstart=0;           % Sim start time
-tstop=4000;        % Sim stop time
+tstop=3300;        % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
 p0=[1500 500];      % Initial position (NED)
 v0=[6.63 0]';       % Initial velocity (body)
+u_r_0 = v0(1);
 psi0=50*deg2rad;             % Inital yaw angle
 r0=0;               % Inital yaw rate
 c=1;                % Current on (1)/off (0)
@@ -100,7 +74,7 @@ target_start = WP(:,1);
 target_WP = WP(:,2);
 target_heading_deg =-(target_WP(2)-target_start(1))/(target_WP(1)-target_start(2));
 target_heading_deg = target_heading_deg / norm(target_heading_deg);
-target_heading_deg = atan2(WP(2,2)-WP(2,1),WP(1,2)-WP(1,1));
+target_heading_deg = atan2(WP(1,2)-WP(1,1),WP(2,2)-WP(2,1));
 stepsize = U_t;
 for i = 1:tstop
     target_position(1, i+1) = target_position(1, i) + stepsize * sin(target_heading_deg);
@@ -121,12 +95,18 @@ pathplotter(p(:,1), p(:,2), psi, tsamp, dec, tstart, tstop, object_tracking, WP(
 
 figure()
 plot(t, pos_error)
+title('pos error');
 
 figure()
 plot(t, dist_error)
+title('dist error');
 
 figure()
-plot(target_position(2,:), target_position(1,:)); hold on;
-plot(3500, -2500, 'r*');
+plot(target_position_2(:,2), target_position_2(:,1)); hold on;
+plot(-2500, -3500, 'r*');
+title('target');
 
+
+figure()
+plot(t, v(:,1))
 

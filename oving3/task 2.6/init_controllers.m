@@ -27,14 +27,9 @@ omega_n = 0.008;
 d1 = -0.0021;
 d2 = 1.0377;
 m = 5550;
-lambda_speed = 0.01;
+lambda_speed = 0.3;
 Kp_speed = 2*lambda_speed;
 Ki_speed = lambda_speed^2;
-u_r_0 = 100;
-u_r_final = 100;
-u_r_step_time = 2000;
-
-
 
 
 

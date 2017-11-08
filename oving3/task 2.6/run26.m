@@ -41,6 +41,7 @@ tsamp=10;           % Sampling time for how often states are stored. (NOT ODE so
                 
 p0=[1500 500];      % Initial position (NED)
 v0=[6.63 0]';       % Initial velocity (body)
+u_r_0 = v0(1);
 psi0=50*deg2rad;             % Inital yaw angle
 r0=0;               % Inital yaw rate
 c=1;                % Current on (1)/off (0)
@@ -139,8 +140,6 @@ sim MSFartoystyring22
 
 pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,WP);
 %}
-
-
 
 
 

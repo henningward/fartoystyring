@@ -9,7 +9,7 @@ rad2deg = 180/pi;
 deg2rad = pi/180;
 
 tstart=0;           % Sim start time
-tstop=5000;        % Sim stop time
+tstop=5000;         % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
 p0=zeros(2,1);      % Initial position (NED)
