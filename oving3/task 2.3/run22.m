@@ -54,7 +54,8 @@ init_controllers
 %Loading waypoints
 load('WP.mat')
 
-
+wpt_posx = WP(1,:);
+wpt_posy  =WP(2,:);
 wpt_time = [0 20 40 60 80 100]; 
 t = 0:1:max(wpt_time);
 

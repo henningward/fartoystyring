@@ -7,12 +7,14 @@ velocity_max = 85*2*pi/60;
 
 
 %nomoto parameters
-T = 62.6809;
-K = -0.0337;
+T = 65.6949;
+K = -0.033;
 
 %heading model parameters
 zeta_c = 1;
 omega_c = 1;
+
+
 
 w_psi = 0.05;
 lambda_heading = 0.25;
