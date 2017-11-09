@@ -84,6 +84,7 @@ u_r_step_time = 500;
 
 sim MSFartoystyring18
 
+
 figure()
 plot(t, u_r, 'LineWidth', 2, 'Color', 'g');
 hold on;
@@ -97,7 +98,7 @@ ylabel('speed [m/s]')
 
 
 figure()
-plot(t,u_tilde, 'LineWidth', 1);
+plot(t,u_tilde, 'LineWidth', 3);
 legend({'$\tilde{u}$'}, 'Interpreter','latex', 'FontSize', 13)
 xlabel('time (s)')
 ylabel('speed error [m/s]')
@@ -105,14 +106,14 @@ ylabel('speed error [m/s]')
 
 
 figure()
-plot(t, psi*rad2deg, 'LineWidth', 1);
-legend({'psi' }, 'Interpreter','latex', 'FontSize', 13)
+plot(t, psi*rad2deg, 'LineWidth', 2);
+legend({'$\psi$' }, 'Interpreter','latex', 'FontSize', 13)
 xlabel('time (s)')
 ylabel('yaw angle [deg]')
 %title('','Interpreter','latex','FontSize',16)
 
 figure()
-plot(t, r*rad2deg,'LineWidth', 1);
+plot(t, r*rad2deg,'LineWidth', 2);
 legend({'r'}, 'Interpreter','latex', 'FontSize', 15)
 xlabel('time (s)')
 ylabel('yaw rate [deg/s]')
@@ -123,8 +124,8 @@ figure()
 satlim = ((85*2*pi)/60)*rad2deg*ones(1,length(t));
 plot(t, satlim, 'LineWidth', 3, 'Color', 'c')
 hold on;
-plot(t, shaft,'LineWidth', 1);
-legend({'Saturation limit', 'Shaft $n_{c}$'}, 'Interpreter','latex', 'FontSize', 11)
+plot(t, shaft*rad2deg,'LineWidth', 2);
+legend({'Saturation limit','Shaft $n_{c}$'}, 'Interpreter','latex', 'FontSize', 11)
 xlabel('time (s)')
 ylabel('shaft velocity [degrees/s]')
 %title('','Interpreter','latex','FontSize',16)
@@ -133,8 +134,8 @@ figure()
 satlim = 25*ones(1,length(t));
 plot(t, satlim, 'LineWidth', 3, 'Color', 'c')
 hold on;
-plot(t, rudder_input(1:501,1)*rad2deg,'LineWidth', 1, 'Color', 'b');
-legend({'Saturation limit', 'Rudder input $d_{c}$'}, 'Interpreter','latex', 'FontSize', 11)
+plot(t, rudder_input(1:501,1)*rad2deg,'LineWidth', 2, 'Color', 'b');
+legend({'Saturation limit','Rudder input $d_{c}$'}, 'Interpreter','latex', 'FontSize', 11)
 xlabel('time (s)')
 ylabel('rudder input [degrees]')
 %title('','Interpreter','latex','FontSize',16)
