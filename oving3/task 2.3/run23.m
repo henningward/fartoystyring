@@ -144,7 +144,7 @@ pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,WP);
 
 
 %% SIMULATION
-sim MSFartoystyring22
+sim MSFartoystyring23
 
 %% Path Plot
 
