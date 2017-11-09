@@ -58,42 +58,42 @@ sim MSFartoystyring14
 
 figure()
 plot(t,psi_tilde*rad2deg, 'LineWidth', 2);
-legend({'$\tilde\psi$'}, 'Interpreter','latex')
+legend({'$\tilde\psi$'}, 'Interpreter','latex','FontSize', 13)
 xlabel('time (s)')
 ylabel('Heading error [deg]')
 %title('Closed loop behaviour of $\tilde{\psi}$','Interpreter','latex', 'FontSize',16)
 
 figure()
-plot(t,psi*rad2deg, 'LineWidth', 1, 'Color', 'r');
+plot(t,psi*rad2deg, 'LineWidth', 2, 'Color', 'r');
 hold on;
-plot(t,psi_d*rad2deg, '--','LineWidth', 2, 'Color', 'b')
-legend({'$\psi$', '$\psi_d$'}, 'Interpreter','latex')
+plot(t,psi_d*rad2deg, '--','LineWidth', 3, 'Color', 'b')
+legend({'$\psi$', '$\psi_d$'}, 'Interpreter','latex','FontSize', 13)
 xlabel('time (s)')
 ylabel('Heading [deg]')
 %title('Closed loop behaviour of $\psi$ and $\psi_d$','Interpreter','latex', 'FontSize',16)
 
 figure()
 plot(t,r_tilde*rad2deg, 'LineWidth', 2);
-legend({'$\tilde{r}$'}, 'Interpreter','latex')
+legend({'$\tilde{r}$'}, 'Interpreter','latex','FontSize', 13)
 xlabel('time (s)')
 ylabel('Heading error rate [deg/s]')
 %title('Closed loop behaviour of $\tilde{r}$','Interpreter','latex','FontSize',16)
 
 figure()
-plot(t,r*rad2deg, 'LineWidth', 1, 'Color', 'r');
+plot(t,r*rad2deg, 'LineWidth', 2, 'Color', 'r');
 hold on;
-plot(t,r_d*rad2deg, '--', 'LineWidth', 2, 'Color', 'b')
-legend({'$r$', '$r_d$'}, 'Interpreter','latex')
+plot(t,r_d*rad2deg, '--', 'LineWidth', 3, 'Color', 'b')
+legend({'$r$', '$r_d$'}, 'Interpreter','latex','FontSize', 13)
 xlabel('time (s)')
 ylabel('Heading rate [deg/s]')
 %title('Closed loop behaviour of $r$ and $r_d$','Interpreter','latex', 'FontSize',16)
 
 figure()
 satlim = 25*ones(1,length(t));
-plot(t,rudder_input(1:501,1)*rad2deg, 'LineWidth', 1);
+plot(t,rudder_input(1:501,1)*rad2deg, 'LineWidth', 2);
 hold on;
-plot(t, satlim, 'LineWidth', 2, 'Color', 'c')
-legend({'$\delta_{c}$', 'Saturation at 25 degrees'}, 'Interpreter','latex') %kommenter det at dette skjer internt, altså vil den fortsatt gå forbi eksternt
+plot(t, satlim, 'LineWidth', 3, 'Color', 'c')
+legend({'$\delta_{c}$', 'Saturation at 25 degrees'}, 'Interpreter','latex','FontSize', 12) %kommenter det at dette skjer internt, altsï¿½ vil den fortsatt gï¿½ forbi eksternt
 xlabel('time (s)')
 ylabel('rudder input [deg]')
 %title('Rudder input $\delta_c$','Interpreter','latex','FontSize',16)
