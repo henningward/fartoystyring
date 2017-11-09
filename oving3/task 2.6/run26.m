@@ -29,14 +29,13 @@ clear all
 clc
 close all
 
-
 %%
 
 rad2deg = 180/pi;
 deg2rad = pi/180;
 
 tstart=0;           % Sim start time
-tstop=5000;        % Sim stop time
+tstop=4500;        % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
 p0=[1500 500];      % Initial position (NED)
