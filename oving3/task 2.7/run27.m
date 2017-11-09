@@ -9,7 +9,7 @@ rad2deg = 180/pi;
 deg2rad = pi/180;
 
 tstart=0;           % Sim start time
-tstop=3300;        % Sim stop time
+tstop=7000;        % Sim stop time
 tsamp=10;           % Sampling time for how often states are stored. (NOT ODE solver time step)
                 
 p0=[1500 500];      % Initial position (NED)
@@ -34,37 +34,6 @@ wpt_posy = WP(2,:);
 wpt_time = [0 20 40 60 80 100]; 
 t = 0:1:max(wpt_time);
 
-% method 1 - cubic Hermite interpolation
-x_p = pchip(wpt_time,wpt_posx,t);
-y_p = pchip(wpt_time,wpt_posy,t);
-
-% method 2 - spline interpolation
-x_s = spline(wpt_time,wpt_posx,t); 
-y_s = spline(wpt_time,wpt_posy,t);
-%{
-%plotting method 1 vs method 2
-figure()
-subplot(311), plot(wpt_time,wpt_posx,'o',t,[x_p; x_s])
-legend ('waypoint-x position', 'hermite-x position', 'spine-x position');
-xlabel('time (s)')
-ylabel('x- position (m)')
-subplot(312), plot(wpt_time,wpt_posy,'o',t,[y_p; y_s])
-legend ('waypoint-y position', 'hermite-y position', 'spine-y position');
-xlabel('time (s)')
-ylabel('y- position (m)')
-subplot(313), plot(wpt_posy,wpt_posx,'o',y_p,x_p,y_s,x_s)
-legend ('position', 'hermite position', 'spine position');
-xlabel('y- position (m)')
-ylabel('x- position (m)')
-
-% method 3 - Dubins path
-
-%Need to find maximum turning radius
-sim MSFartoystyringtask21
-
-pathplotter(p(:,1),p(:,2),psi,tsamp,100,tstart,tstop,0,zeros(2))
-title('Path with maximum rudder and velocity to find turning radius')
-%}
 
 %% simulation of target path
 U_t = 3;
