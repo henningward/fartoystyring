@@ -15,7 +15,7 @@ tsamp=10;           % Sampling time for how often states are stored. (NOT ODE so
 p0=[1500 500];      % Initial position (NED)
 v0=[6.63 0]';       % Initial velocity (body)
 u_r_0 = v0(1);
-psi0=50*deg2rad;             % Inital yaw angle
+psi0=150*deg2rad;             % Inital yaw angle
 r0=0;               % Inital yaw rate
 c=1;                % Current on (1)/off (0)
 
@@ -74,7 +74,7 @@ target_start = WP(:,1);
 target_WP = WP(:,2);
 target_heading_deg =-(target_WP(2)-target_start(1))/(target_WP(1)-target_start(2));
 target_heading_deg = target_heading_deg / norm(target_heading_deg);
-target_heading_deg = atan2(WP(1,2)-WP(1,1),WP(2,2)-WP(2,1));
+target_heading_deg = atan2(WP(2,2)-WP(2,1),WP(1,2)-WP(1,1));
 stepsize = U_t;
 for i = 1:tstop
     target_position(1, i+1) = target_position(1, i) + stepsize * sin(target_heading_deg);
@@ -91,7 +91,7 @@ sim MSFartoystyring27
 
 dec = 20;
 object_tracking = 1;
-pathplotter(p(:,1), p(:,2), psi, tsamp, dec, tstart, tstop, object_tracking, WP(:,1:2));
+pathplotter(p(:,1), p(:,2), psi, tsamp, dec, tstart, tstop, object_tracking, WP);
 
 figure()
 plot(t, pos_error)
